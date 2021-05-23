@@ -8,5 +8,5 @@ import java.util.Map;
 
 @Data
 public class TimeSeries {
-    private final Map<LocalDateTime,StockValues> timeSeries = new HashMap<>();
+  private final Map<LocalDateTime, StockValues> timeSeries = new HashMap<>();
 }

@@ -6,6 +6,6 @@ import java.time.LocalTime;
 
 @Data
 public class Stock {
-    private final String symbol, name, type, region, timezone, currency;
-    private final LocalTime marketOpen, marketClose;
+  private final String symbol, name, type, region, timezone, currency;
+  private final LocalTime marketOpen, marketClose;
 }
