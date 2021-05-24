@@ -6,3 +6,19 @@ edu/austral/aseca/app/models/StockValues.java
  edu.austral.aseca.app.models.StockValues
 edu/austral/aseca/app/models/TimeSeries.java
  edu.austral.aseca.app.models.TimeSeries
+edu/austral/aseca/app/models/Receipt.java
+ edu.austral.aseca.app.models.Receipt
+edu/austral/aseca/app/models/User.java
+ edu.austral.aseca.app.models.User
+edu/austral/aseca/app/services/ApiService.java
+ edu.austral.aseca.app.services.ApiService
+edu/austral/aseca/app/services/ApiServiceImpl.java
+ edu.austral.aseca.app.services.ApiServiceImpl
+edu/austral/aseca/app/services/UserService.java
+ edu.austral.aseca.app.services.UserService
+edu/austral/aseca/app/controllers/StockController.java
+ edu.austral.aseca.app.controllers.StockController
+edu/austral/aseca/app/services/FakeApiServiceImpl.java
+ edu.austral.aseca.app.services.FakeApiServiceImpl
+edu/austral/aseca/app/services/StockService.java
+ edu.austral.aseca.app.services.StockService
