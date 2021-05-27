@@ -1,6 +1,7 @@
 package edu.austral.aseca.app.controllers;
 
 
+import edu.austral.aseca.app.dtos.StockStatsDto;
 import edu.austral.aseca.app.models.Receipt;
 import edu.austral.aseca.app.services.StockService;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,11 @@ public class StockController {
   @GetMapping(path = "/{symbol}")
   public String getCurrentPrice(@PathVariable String symbol) throws IOException, InterruptedException {
     return service.getCurrentPrice(symbol);
+  }
+
+  @GetMapping(path = "/stats/{symbol}")
+  public StockStatsDto getStockStats(@PathVariable String symbol) throws IOException, InterruptedException {
+    return service.getStockStats(symbol);
   }
   
   @PutMapping(path = "/{userId}/{symbol}/{quantity}")

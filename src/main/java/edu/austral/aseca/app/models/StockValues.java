@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class StockValues {
-  private final float open, high, low, close, volume;
+  private final float open, high, low, close;
+  private final int volume;
 }
