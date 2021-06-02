@@ -28,18 +28,9 @@ public class ApiServiceImpl implements ApiService {
     final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     return response.body();
   }
-    @Override
-    public String getCurrentPrice(String symbol) throws IOException, InterruptedException {
-        final String apiKey = "0BVKERJEHWQ6YJZL";
-        final HttpClient client = HttpClient.newHttpClient();
-        final HttpRequest request = HttpRequest.newBuilder(URI.create("https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + symbol + "&apikey=" + apiKey)).build();
-        final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body();
-    }
 
     @Override
     public String getWeeklyStats(String symbol) throws IOException, InterruptedException {
-        final String apiKey = "0BVKERJEHWQ6YJZL";
         final HttpClient client = HttpClient.newHttpClient();
         final HttpRequest request = HttpRequest.newBuilder(URI.create("https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=" + symbol + "&apikey=" + apiKey)).build();
         final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -48,7 +39,6 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public String getCurrentStats(String symbol) throws IOException, InterruptedException {
-        final String apiKey = "0BVKERJEHWQ6YJZL";
         final HttpClient client = HttpClient.newHttpClient();
         final HttpRequest request = HttpRequest.newBuilder(URI.create("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+symbol+"&interval=60min&apikey=" + apiKey)).build();
         final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -57,7 +47,6 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public String getDailyStats(String symbol) throws IOException, InterruptedException {
-        final String apiKey = "0BVKERJEHWQ6YJZL";
         final HttpClient client = HttpClient.newHttpClient();
         final HttpRequest request = HttpRequest.newBuilder(URI.create("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+symbol+"&apikey=" + apiKey)).build();
         final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

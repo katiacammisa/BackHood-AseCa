@@ -33,10 +33,7 @@ public class StockService {
     this.apiService = apiService;
     this.userService = userService;
   }
-  
-  public String getCurrentPrice(String symbol) throws IOException, InterruptedException {
-    return apiService.getCurrentPrice(symbol);
-  }
+
   
   public Optional<Receipt> buyStock(String symbol, double quantity, Long userId) throws IOException, InterruptedException {
     final String currentPrice = getCurrentPrice(symbol);
@@ -96,24 +93,9 @@ public class StockService {
     jsons[jsons.length-1] = "{" + jsons[jsons.length-1].substring(0, jsons[jsons.length-1].length()-1);
     return jsons;
   }
-    private final ApiService apiService;
-    private final UserService userService;
-
-    public StockService(ApiService apiService, UserService userService) {
-        this.apiService = apiService;
-        this.userService = userService;
-    }
 
     public String getCurrentPrice(String symbol) throws IOException, InterruptedException {
         return apiService.getCurrentPrice(symbol);
-    }
-
-    public Optional<Receipt> buyStock(String symbol, double quantity, Long userId) throws IOException, InterruptedException {
-        final double price = getPrice(symbol);
-        final User user = userService.findById(userId);
-        if (user.getFunds() < price * quantity) return Optional.empty();
-        final Receipt r = new Receipt(userId, symbol, quantity, price);
-        return Optional.of(r);
     }
 
     public StockStatsDto getStockStats(String symbol) throws IOException, InterruptedException {
@@ -148,16 +130,6 @@ public class StockService {
         final String stringPrice = getFromJson(gQ, "05. price");
         final double price = Double.parseDouble(stringPrice);
         return price;
-    }
-
-    private static String getFromJson(String json, String property) {
-        try {
-            JSONObject fieldsJson = new JSONObject(json);
-            return fieldsJson.getString(property);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     private TimeSeriesWeekly jsonTo52WeekTimeSeries(String response) {

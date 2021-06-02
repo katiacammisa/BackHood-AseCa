@@ -6,7 +6,7 @@ public interface ApiService {
 
   String getCurrentPrice(String symbol) throws IOException, InterruptedException;
 
-  String getStocks(String keyword) throws IOException, InterruptedException;}
+  String getStocks(String keyword) throws IOException, InterruptedException;
 
   String getWeeklyStats(String symbol) throws IOException, InterruptedException;
 
