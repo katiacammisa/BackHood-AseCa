@@ -2,12 +2,14 @@ package edu.austral.aseca.app.controllers;
 
 
 import edu.austral.aseca.app.models.Receipt;
+import edu.austral.aseca.app.models.Stock;
 import edu.austral.aseca.app.services.StockService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
@@ -23,6 +25,11 @@ public class StockController {
   @GetMapping(path = "/{symbol}")
   public String getCurrentPrice(@PathVariable String symbol) throws IOException, InterruptedException {
     return service.getCurrentPrice(symbol);
+  }
+
+  @GetMapping(path = "/list")
+  public List<Stock> getStocks(@RequestParam(defaultValue = "") String keyword) throws IOException, InterruptedException {
+    return service.getStocks(keyword);
   }
   
   @PutMapping(path = "/{userId}/{symbol}/{quantity}")

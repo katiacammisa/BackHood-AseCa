@@ -19,7 +19,7 @@ class BuyStockTests {
   
   private final FakeApiServiceImpl fakeApiService = new FakeApiServiceImpl();
   private final UserService userService = new UserService();
-  private StockService stockService = new StockService(fakeApiService, userService);
+  private final StockService stockService = new StockService(fakeApiService, userService);
   
   @Test
   void contextLoads() {
