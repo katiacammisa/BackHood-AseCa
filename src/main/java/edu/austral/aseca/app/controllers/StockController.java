@@ -1,6 +1,7 @@
 package edu.austral.aseca.app.controllers;
 
 
+import edu.austral.aseca.app.dtos.StockStatsDto;
 import edu.austral.aseca.app.models.Receipt;
 import edu.austral.aseca.app.models.Stock;
 import edu.austral.aseca.app.services.StockService;
@@ -31,7 +32,12 @@ public class StockController {
   public List<Stock> getStocks(@RequestParam(defaultValue = "") String keyword) throws IOException, InterruptedException {
     return service.getStocks(keyword);
   }
-  
+
+  @GetMapping(path = "/stats/{symbol}")
+  public StockStatsDto getStockStats(@PathVariable String symbol) throws IOException, InterruptedException {
+    return service.getStockStats(symbol);
+  }
+
   @PutMapping(path = "/{userId}/{symbol}/{quantity}")
   public Receipt buy(@PathVariable Long userId, @PathVariable String symbol, @PathVariable Long quantity) {
     try {
