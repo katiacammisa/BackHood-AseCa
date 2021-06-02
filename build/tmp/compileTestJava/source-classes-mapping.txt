@@ -1,4 +1,6 @@
-edu/austral/aseca/app/AppApplicationTests.java
- edu.austral.aseca.app.AppApplicationTests
+edu/austral/aseca/app/StockStatsTests.java
+ edu.austral.aseca.app.StockStatsTests
 edu/austral/aseca/app/BuyStockTests.java
  edu.austral.aseca.app.BuyStockTests
+edu/austral/aseca/app/AppApplicationTests.java
+ edu.austral.aseca.app.AppApplicationTests

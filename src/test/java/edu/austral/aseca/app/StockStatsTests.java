@@ -47,7 +47,7 @@ public class StockStatsTests {
         fakeApiService.setOpen(open);
         try {
             StockStatsDto dto = stockService.getStockStats("IBM");
-            assertEquals(open,(double)dto.getDailyPrices().get(LocalDate.now()));
+            assertEquals(open,(double)dto.getDailyPrices().get(0).getPrice());
         } catch (IOException | InterruptedException e) {
             fail();
         }

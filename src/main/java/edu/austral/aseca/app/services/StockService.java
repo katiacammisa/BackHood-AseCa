@@ -2,6 +2,7 @@ package edu.austral.aseca.app.services;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.austral.aseca.app.dtos.DailyPrices;
 import edu.austral.aseca.app.dtos.StockStatsDto;
 import edu.austral.aseca.app.models.*;
 import org.codehaus.jettison.json.JSONException;
@@ -56,7 +57,8 @@ public class StockService {
         String responseDaily = apiService.getCurrentStats(symbol);
         TimeSeriesDaily daily = jsonToTodayStats(responseDaily);
         ArrayList<LocalDateTime> list1 = new ArrayList<>(daily.getTimeSeries().keySet());
-        StockValues todayValue = daily.getTimeSeries().get(list1.get(0));
+        list1.sort(LocalDateTime::compareTo);
+        StockValues todayValue = daily.getTimeSeries().get(list1.get(list1.size()-1));
 
         float price = (float) getPrice(symbol);
 
@@ -105,8 +107,8 @@ public class StockService {
         return timeSeriesDaily;
     }
 
-    private Map<LocalDate, Float> getDailyPrices(String symbol) throws IOException, InterruptedException {
-        HashMap<LocalDate, Float> map = new HashMap<>();
+    private List<DailyPrices> getDailyPrices(String symbol) throws IOException, InterruptedException {
+        List<DailyPrices> result = new ArrayList<>();
         try {
             String response = apiService.getDailyStats(symbol);
             ObjectMapper mapper = new ObjectMapper();
@@ -118,12 +120,12 @@ public class StockService {
             localDates.sort(c);
             for (LocalDate s : localDates) {
                 float open = Float.parseFloat(apiResponse.get(s.toString()).get("1. open"));
-                map.put(s, open);
+                result.add(new DailyPrices(s.toString(),open));
             }
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         }
-        return map;
+        return result;
     }
 
 }
