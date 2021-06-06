@@ -1,6 +1,7 @@
 package edu.austral.aseca.app.services;
 
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;

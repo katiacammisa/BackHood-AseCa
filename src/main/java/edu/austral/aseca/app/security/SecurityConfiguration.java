@@ -1,5 +1,9 @@
 package edu.austral.aseca.app.security;
 
+import edu.austral.aseca.app.services.ApiService;
+import edu.austral.aseca.app.services.ApiServiceImpl;
+import edu.austral.aseca.app.services.FakeApiServiceImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -32,5 +36,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
     http.authorizeRequests().anyRequest().permitAll().and().cors();
+  }
+
+  @ConditionalOnProperty(name = "environment", havingValue = "test")
+  @Bean
+  public ApiService fakeApiServiceImpl() {
+    return new FakeApiServiceImpl();
+  }
+
+  @ConditionalOnProperty(name = "environment", havingValue = "prod")
+  @Bean
+  public ApiService apiServiceImpl() {
+    return new ApiServiceImpl();
   }
 }
