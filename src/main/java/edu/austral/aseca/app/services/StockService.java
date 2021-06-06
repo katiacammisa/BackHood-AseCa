@@ -33,7 +33,6 @@ public class StockService {
     this.apiService = apiService;
     this.userService = userService;
   }
-
   
   public Optional<Receipt> buyStock(String symbol, double quantity, Long userId) throws IOException, InterruptedException {
     final String currentPrice = getCurrentPrice(symbol);
@@ -122,6 +121,10 @@ public class StockService {
         float price = (float) getPrice(symbol);
 
         return new StockStatsDto(price, todayValue.getOpen(), todayValue.getHigh(), todayValue.getLow(), week52Low, week52High, todayValue.getVolume(), volumeAverage, getDailyPrices(symbol));
+    }
+
+    public String getQualifications() {
+        return "{buy: 2, hold: 10, sell: 1}";
     }
 
     private double getPrice(String symbol) throws IOException, InterruptedException {
