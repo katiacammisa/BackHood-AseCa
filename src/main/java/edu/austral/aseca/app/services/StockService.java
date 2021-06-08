@@ -120,7 +120,7 @@ public class StockService {
 
         float price = (float) getPrice(symbol);
 
-        return new StockStatsDto(price, todayValue.getOpen(), todayValue.getHigh(), todayValue.getLow(), week52Low, week52High, todayValue.getVolume(), volumeAverage, getDailyPrices(symbol));
+        return new StockStatsDto(price, todayValue.getOpen(), todayValue.getHigh(), todayValue.getLow(), week52Low, week52High, todayValue.getVolume(), volumeAverage, getDailyPrices(symbol), 0.8, 0.5);
     }
 
     public String getQualifications() {
