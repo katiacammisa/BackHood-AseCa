@@ -13,4 +13,5 @@ public class StockStatsDto {
     private int volume;
     private long volumeAverage;
     private List<DailyPrices> dailyPrices;
+    private double pe, dividendsyield;
 }

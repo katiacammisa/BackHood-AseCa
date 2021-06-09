@@ -38,6 +38,11 @@ public class StockController {
     return service.getStockStats(symbol);
   }
 
+  @GetMapping(path = "/qualifications")
+  public String getQualifications() {
+    return service.getQualifications();
+  }
+
   @PutMapping(path = "/{userId}/{symbol}/{quantity}")
   public Receipt buy(@PathVariable Long userId, @PathVariable String symbol, @PathVariable Long quantity) {
     try {
