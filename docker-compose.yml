@@ -1,10 +1,15 @@
 version: "3"
 
+networks:
+  app-network:
+    driver: bridge
+
 volumes:
   data:
 
 services:
   db:
+    container_name: hoodrobin-db
     image: postgres:12
     ports:
       - 5434:5432
@@ -12,5 +17,18 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: hoodrobin
+    networks:
+      - app-network
     volumes:
       - data:/var/lib/postgresql/data
+  app:
+    container_name: hoodrobin-app
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - 8080:8080
+    networks:
+      - app-network
+    depends_on:
+      - db
