@@ -1,6 +1,5 @@
 package edu.austral.aseca.app.controllers;
 
-
 import edu.austral.aseca.app.dtos.StockStatsDto;
 import edu.austral.aseca.app.models.Receipt;
 import edu.austral.aseca.app.models.Stock;

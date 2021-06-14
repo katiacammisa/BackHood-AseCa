@@ -32,3 +32,5 @@ services:
       - app-network
     depends_on:
       - db
+    mem_limit: 512m
+    cpus: 1
