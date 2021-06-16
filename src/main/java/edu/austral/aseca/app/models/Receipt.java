@@ -23,4 +23,8 @@ public class Receipt {
     this.price = price;
     totalPrice = quantity * price;
   }
+  
+  public static Receipt empty() {
+    return new Receipt();
+  }
 }
