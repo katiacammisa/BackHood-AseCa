@@ -129,7 +129,7 @@ public class StockService {
     }
 
     public String getQualifications() {
-        return "{buy: 2, hold: 10, sell: 1}";
+        return "{ \"buy\": 2, \"hold\": 10, \"sell\": 1 }";
     }
 
     private double getPrice(String symbol) throws IOException, InterruptedException {
