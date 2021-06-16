@@ -30,7 +30,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v1.1.2
+        tag_name: v1.2.0
         release_name: Release 4-v1.2.0
         body: Releasing
         draft: false
