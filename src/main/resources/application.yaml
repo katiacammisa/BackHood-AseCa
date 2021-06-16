@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/hoodrobin
+    url: jdbc:postgresql://hoodrobin-db:5432/hoodrobin
     driver-class-name: org.postgresql.Driver
     username: user
     password: password
