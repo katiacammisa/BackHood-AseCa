@@ -8,104 +8,70 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class StockStatsTests {
 
+    public static final String SYMBOL = "TEST_SYMBOL";
     private final FakeApiServiceImpl fakeApiService = new FakeApiServiceImpl();
     private final UserService userService = new UserService();
     private final StockService stockService = new StockService(fakeApiService, userService);
 
     @Test
-    public void test001_GivenAValidSymbolShouldReturnStockStatsDto(){
-        String symbol = "IBM";
-        try {
-            stockService.getStockStats(symbol);
-        } catch (IOException | InterruptedException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void test002_GivenAnOpenPriceOf200ResponseOpenShouldBe200(){
+    public void test001_GivenAnOpenPriceOf200ResponseOpenShouldBe200() throws IOException, InterruptedException {
         double open = 200;
         fakeApiService.setOpen(open);
-        try {
-            StockStatsDto dto = stockService.getStockStats("IBM");
-            assertEquals(open,dto.getOpen());
-        } catch (IOException | InterruptedException e) {
-            fail();
-        }
+        StockStatsDto dto = stockService.getStockStats(SYMBOL);
+        assertEquals(open, dto.getOpen());
     }
 
     @Test
-    public void test003_GivenAnOpenPriceOf100ResponseDailyPricesShouldBe100(){
+    public void test002_GivenAnOpenPriceOf100ResponseDailyPricesShouldBe100() throws IOException, InterruptedException {
         double open = 100;
         fakeApiService.setOpen(open);
-        try {
-            StockStatsDto dto = stockService.getStockStats("IBM");
-            assertEquals(open,(double)dto.getDailyPrices().get(0).getPrice());
-        } catch (IOException | InterruptedException e) {
-            fail();
-        }
+        StockStatsDto dto = stockService.getStockStats(SYMBOL);
+        assertEquals(open, (double) dto.getDailyPrices().get(0).getPrice());
     }
 
     @Test
-    public void test004_GivenALowPriceOf50AndMinimumLowOf40ResponseLowPricesShouldBe50And52WeekLowShouldBe40(){
+    public void test003_GivenALowPriceOf50AndMinimumLowOf40ResponseLowPricesShouldBe50And52WeekLowShouldBe40() throws IOException, InterruptedException {
         double low = 50;
         double minimumLow = 40;
         fakeApiService.setLow(low);
         fakeApiService.setMinimumLow(minimumLow);
-        try {
-            StockStatsDto dto = stockService.getStockStats("IBM");
-            assertEquals(low,dto.getLow());
-            assertEquals(minimumLow,dto.getWeek52low());
-        } catch (IOException | InterruptedException e) {
-            fail();
-        }
+        StockStatsDto dto = stockService.getStockStats(SYMBOL);
+        assertEquals(low, dto.getLow());
+        assertEquals(minimumLow, dto.getWeek52low());
     }
 
     @Test
-    public void test005_GivenAHighPriceOf500AndMaximumHighOf600ResponseHighPricesShouldBe500And52WeekHighShouldBe600(){
+    public void test004_GivenAHighPriceOf500AndMaximumHighOf600ResponseHighPricesShouldBe500And52WeekHighShouldBe600() throws IOException, InterruptedException {
         double high = 500;
         double maximumHigh = 600;
         fakeApiService.setHigh(high);
         fakeApiService.setMaximumHigh(maximumHigh);
-        try {
-            StockStatsDto dto = stockService.getStockStats("IBM");
-            assertEquals(high,dto.getHigh());
-            assertEquals(maximumHigh,dto.getWeek52high());
-        } catch (IOException | InterruptedException e) {
-            fail();
-        }
+        StockStatsDto dto = stockService.getStockStats(SYMBOL);
+        assertEquals(high, dto.getHigh());
+        assertEquals(maximumHigh, dto.getWeek52high());
     }
 
     @Test
-    public void test006_GivenAVolumeOf14000ResponseVolumeShouldBe14000AndAverageShouldBe2000(){
+    public void test005_GivenAVolumeOf14000ResponseVolumeShouldBe14000AndAverageShouldBe2000() throws IOException, InterruptedException {
         int volume = 14000;
-        int average = volume/7;
+        int average = volume / 7;
         fakeApiService.setVolume(volume);
-        try {
-            StockStatsDto dto = stockService.getStockStats("IBM");
-            assertEquals(volume,dto.getVolume());
-            assertEquals(average,dto.getVolumeAverage());
-        } catch (IOException | InterruptedException e) {
-            fail();
-        }
+        StockStatsDto dto = stockService.getStockStats(SYMBOL);
+        assertEquals(volume, dto.getVolume());
+        assertEquals(average, dto.getVolumeAverage());
     }
 
     @Test
-    public void test007_GivenAPriceOf1400ResponsePriceShouldBe1400(){
+    public void test006_GivenAPriceOf1400ResponsePriceShouldBe1400() throws IOException, InterruptedException {
         int price = 1400;
         fakeApiService.setPrice(price);
-        try {
-            StockStatsDto dto = stockService.getStockStats("IBM");
-            assertEquals(price,dto.getPrice());
-        } catch (IOException | InterruptedException e) {
-            fail();
-        }
+        StockStatsDto dto = stockService.getStockStats(SYMBOL);
+        assertEquals(price, dto.getPrice());
     }
 }
