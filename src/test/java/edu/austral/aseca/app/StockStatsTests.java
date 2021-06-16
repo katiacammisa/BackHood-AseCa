@@ -1,23 +1,24 @@
 package edu.austral.aseca.app;
 
 import edu.austral.aseca.app.dtos.StockStatsDto;
+import edu.austral.aseca.app.respository.EmptyReceiptRepository;
+import edu.austral.aseca.app.respository.ReceiptRepository;
 import edu.austral.aseca.app.services.FakeApiServiceImpl;
 import edu.austral.aseca.app.services.StockService;
 import edu.austral.aseca.app.services.UserService;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@SpringBootTest
 public class StockStatsTests {
-
+    
+    private final ReceiptRepository emptyReceiptRepository = new EmptyReceiptRepository();
     private final FakeApiServiceImpl fakeApiService = new FakeApiServiceImpl();
     private final UserService userService = new UserService();
-    private final StockService stockService = new StockService(fakeApiService, userService);
+    private final StockService stockService = new StockService(fakeApiService, userService, emptyReceiptRepository);
 
     @Test
     public void test001_GivenAValidSymbolShouldReturnStockStatsDto(){
