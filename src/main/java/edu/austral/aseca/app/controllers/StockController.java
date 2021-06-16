@@ -1,7 +1,7 @@
 package edu.austral.aseca.app.controllers;
 
-
 import edu.austral.aseca.app.dtos.StockStatsDto;
+import edu.austral.aseca.app.exceptions.NoFundsException;
 import edu.austral.aseca.app.models.Receipt;
 import edu.austral.aseca.app.models.Stock;
 import edu.austral.aseca.app.services.StockService;
@@ -11,7 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -46,11 +45,9 @@ public class StockController {
   @PutMapping(path = "/{userId}/{symbol}/{quantity}")
   public Receipt buy(@PathVariable Long userId, @PathVariable String symbol, @PathVariable Long quantity) {
     try {
-      final Optional<Receipt> receipt = service.buyStock(symbol, quantity, userId);
-      if (receipt.isPresent()) return receipt.get();
+      return service.buyStock(symbol, quantity, userId);
+    } catch (IOException | InterruptedException | NoFundsException e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough funds");
-    } catch (IOException | InterruptedException e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
   }
 }

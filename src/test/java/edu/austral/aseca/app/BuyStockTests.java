@@ -1,101 +1,76 @@
 package edu.austral.aseca.app;
 
-import edu.austral.aseca.app.models.Receipt;
+import edu.austral.aseca.app.exceptions.NoFundsException;
 import edu.austral.aseca.app.models.User;
+import edu.austral.aseca.app.respository.EmptyReceiptRepository;
+import edu.austral.aseca.app.respository.ReceiptRepository;
 import edu.austral.aseca.app.services.FakeApiServiceImpl;
 import edu.austral.aseca.app.services.StockService;
 import edu.austral.aseca.app.services.UserService;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class BuyStockTests {
   
+  private final ReceiptRepository emptyReceiptRepository = new EmptyReceiptRepository();
   private final FakeApiServiceImpl fakeApiService = new FakeApiServiceImpl();
   private final UserService userService = new UserService();
-  private final StockService stockService = new StockService(fakeApiService, userService);
+  private final StockService stockService = new StockService(fakeApiService, userService, emptyReceiptRepository);
   
   @Test
-  void contextLoads() {
-  }
-  
-  @Test
-  public void test000_WhenCreateUserShouldHaveFunds() {
+  public void test001_WhenCreateUserShouldHaveFunds() {
     final User aUser = new User();
     assertEquals(10000, aUser.getFunds());
   }
   
   @Test
-  public void test000_WhenBuyStockAndUserHasFundsShouldReturnReceipt() throws IOException, InterruptedException {
+  public void test002_WhenBuyStockAndUserHasFundsShouldReturnReceipt() throws IOException, InterruptedException, NoFundsException {
     final String symbol = "AMC";
     final Long userId = 1L;
     final double quantity = 1;
-    final Optional<Receipt> receipt = stockService.buyStock(symbol, quantity, userId);
-    assertTrue(receipt.isPresent());
+    assertDoesNotThrow(() -> stockService.buyStock(symbol, quantity, userId));
   }
   
   @Test
-  public void test000_WhenBuyStockAndUserHasNoFundsShouldReturnEmptyOptional() throws IOException, InterruptedException {
+  public void test003_WhenBuyStockAndUserHasNoFundsShouldThrowNoFundsException() throws IOException, InterruptedException, NoFundsException {
     final String symbol = "AMC";
     final Long userId = 1L;
     final double quantity = 1;
     userService.save(new User(userId, 0));
-    final Optional<Receipt> receipt = stockService.buyStock(symbol, quantity, userId);
-    assertTrue(receipt.isEmpty());
+    assertThrows(NoFundsException.class, () -> stockService.buyStock(symbol, quantity, userId));
   }
   
   @Test
-  public void test000_WhenBuyStockAndUserHasJustEnoughFundsShouldReturnReceipt() throws IOException, InterruptedException {
+  public void test004_WhenBuyStockAndUserHasJustEnoughFundsShouldReturnReceipt() throws IOException, InterruptedException, NoFundsException {
     final String symbol = "AMC";
     final Long userId = 1L;
     final double quantity = 1;
     userService.save(new User(userId, 10));
     fakeApiService.setPrice(10);
-    final Optional<Receipt> receipt = stockService.buyStock(symbol, quantity, userId);
-    assertTrue(receipt.isPresent());
+    assertDoesNotThrow(() -> stockService.buyStock(symbol, quantity, userId));
   }
   
   @Test
-  public void test000_WhenBuyStockAndUserHasJustEnoughFundsPlus1ShouldReturnReceipt() throws IOException, InterruptedException {
+  public void test005_WhenBuyStockAndUserHasJustEnoughFundsPlus1ShouldReturnReceipt() throws IOException, InterruptedException, NoFundsException {
     final String symbol = "AMC";
     final Long userId = 1L;
     final double quantity = 1;
     userService.save(new User(userId, 11));
     fakeApiService.setPrice(10);
-    final Optional<Receipt> receipt = stockService.buyStock(symbol, quantity, userId);
-    assertTrue(receipt.isPresent());
+    assertDoesNotThrow(() -> stockService.buyStock(symbol, quantity, userId));
   }
   
   @Test
-  public void test000_WhenBuyStockAndUserHasJustEnoughFundsMinus1ShouldReturnEmptyReceipt() throws IOException, InterruptedException {
+  public void test006_WhenBuyStockAndUserHasJustEnoughFundsMinus1ShouldReturnEmptyReceipt() throws IOException, InterruptedException, NoFundsException {
     final String symbol = "AMC";
     final Long userId = 1L;
     final double quantity = 1;
     userService.save(new User(userId, 9));
     fakeApiService.setPrice(10);
-    final Optional<Receipt> receipt = stockService.buyStock(symbol, quantity, userId);
-    assertTrue(receipt.isEmpty());
-  }
-  
-  @Test
-  public void test000_WhenBuyStockAndEverythingOkShouldReturnReceiptWithAllTheInformation() throws IOException, InterruptedException {
-    final String symbol = "AMC";
-    final Long userId = 1L;
-    final double quantity = 1;
-    final double price = 123;
-    userService.save(new User(userId));
-    fakeApiService.setPrice(price);
-    final Receipt receipt = stockService.buyStock(symbol, quantity, userId).get();
-    assertEquals(symbol, receipt.getStockSymbol());
-    assertEquals(userId, receipt.getUserId());
-    assertEquals(quantity, receipt.getQuantity());
-    assertEquals(price, receipt.getPrice());
+    assertThrows(NoFundsException.class, () -> stockService.buyStock(symbol, quantity, userId));
   }
 }
 
