@@ -1,5 +1,6 @@
 package edu.austral.aseca.app.services;
 
+import edu.austral.aseca.app.exceptions.NoFundsException;
 import edu.austral.aseca.app.models.Receipt;
 import edu.austral.aseca.app.models.Stock;
 import edu.austral.aseca.app.models.User;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.austral.aseca.app.dtos.DailyPrices;
 import edu.austral.aseca.app.dtos.StockStatsDto;
 import edu.austral.aseca.app.models.*;
+import edu.austral.aseca.app.respository.ReceiptRepository;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -16,39 +18,42 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static edu.austral.aseca.app.utils.Constants.*;
 
 @Service
 public class StockService {
 
   private final ApiService apiService;
   private final UserService userService;
+  private final ReceiptRepository receiptRepository;
   
-  public StockService(ApiService apiService, UserService userService) {
+  public StockService(ApiService apiService, UserService userService, ReceiptRepository receiptRepository) {
     this.apiService = apiService;
     this.userService = userService;
+    this.receiptRepository = receiptRepository;
   }
   
-  public Optional<Receipt> buyStock(String symbol, double quantity, Long userId) throws IOException, InterruptedException {
+  public Receipt buyStock(String symbol, double quantity, Long userId) throws IOException, InterruptedException, NoFundsException {
     final String currentPrice = getCurrentPrice(symbol);
-    final String gQ = getFromJson(currentPrice, "Global Quote");
-    final String stringPrice = getFromJson(gQ, "05. price");
+    final String gQ = getFromJson(currentPrice, globalQuoteKey);
+    final String stringPrice = getFromJson(gQ, priceKey);
     final double price = Double.parseDouble(stringPrice);
     final User user = userService.findById(userId);
-    if (user.getFunds() < price * quantity) return Optional.empty();
+    if (user.getFunds() < price * quantity) throw new NoFundsException();
     final Receipt r = new Receipt(userId, symbol, quantity, price);
-    return Optional.of(r);
+    receiptRepository.save(r);
+    return r;
   }
 
   public List<Stock> getStocks(String keyword) throws IOException, InterruptedException {
     List<Stock> stocks = new ArrayList<>();
     String stocksString = keyword.isEmpty() ? apiService.getStocks("A") : apiService.getStocks(keyword);
-    String[] stockStringArray = getFromJson(stocksString, "bestMatches").split("},\\{");
+    String[] stockStringArray = getFromJson(stocksString, bestMatchesKey).split("},\\{");
     if (stockStringArray[0].equals("[]")) return stocks;
     if (stockStringArray.length < 20)
       for (String s : clean(stockStringArray)) stocks.add(getStockFromString(s));
@@ -70,14 +75,14 @@ public class StockService {
   }
 
   private Stock getStockFromString(String s) {
-    String symbol = getFromJson(s, "1. symbol");
-    String name = getFromJson(s, "2. name");
-    String type = getFromJson(s, "3. type");
-    String region = getFromJson(s, "4. region");
-    LocalTime marketOpen = LocalTime.parse(getFromJson(s, "5. marketOpen"));
-    LocalTime marketClose = LocalTime.parse(getFromJson(s, "6. marketClose"));
-    String timezone = getFromJson(s, "7. timezone");
-    String currency = getFromJson(s, "8. currency");
+    String symbol = getFromJson(s, symbolKey);
+    String name = getFromJson(s, nameKey);
+    String type = getFromJson(s, typeKey);
+    String region = getFromJson(s, regionKey);
+    LocalTime marketOpen = LocalTime.parse(getFromJson(s, marketOpenKey));
+    LocalTime marketClose = LocalTime.parse(getFromJson(s, marketCloseKey));
+    String timezone = getFromJson(s, timezoneKey);
+    String currency = getFromJson(s, currencyKey);
     return new Stock(symbol, name, type, region, timezone, currency, marketOpen, marketClose);
   }
 
@@ -129,8 +134,8 @@ public class StockService {
 
     private double getPrice(String symbol) throws IOException, InterruptedException {
         final String currentPrice = getCurrentPrice(symbol);
-        final String gQ = getFromJson(currentPrice, "Global Quote");
-        final String stringPrice = getFromJson(gQ, "05. price");
+        final String gQ = getFromJson(currentPrice, globalQuoteKey);
+        final String stringPrice = getFromJson(gQ, priceKey);
         final double price = Double.parseDouble(stringPrice);
         return price;
     }
