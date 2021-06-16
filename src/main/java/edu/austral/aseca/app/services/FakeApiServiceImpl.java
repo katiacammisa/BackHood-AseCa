@@ -1,7 +1,6 @@
 package edu.austral.aseca.app.services;
 
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -227,42 +226,47 @@ public class FakeApiServiceImpl implements ApiService {
 
   @Override
   public String getDailyStats(String symbol) throws IOException, InterruptedException {
-    String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    String beforeYesterday = LocalDate.now().minusDays(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    if(symbol.equals("TEST_SYMBOL")) {
 
-    return "{\n" +
-            "    \"Meta Data\": {\n" +
-            "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
-            "        \"2. Symbol\": \""+symbol+"\",\n" +
-            "        \"3. Last Refreshed\": \"2021-05-26\",\n" +
-            "        \"4. Output Size\": \"Compact\",\n" +
-            "        \"5. Time Zone\": \"US/Eastern\"\n" +
-            "    },\n" +
-            "    \"Time Series (Daily)\": {\n" +
-            "        \""+today+"\": {\n" +
-            "            \"1. open\": \""+open+"\",\n" +
-            "            \"2. high\": \""+high+"\",\n" +
-            "            \"3. low\": \""+low+"\",\n" +
-            "            \"4. close\": \"143.3101\",\n" +
-            "            \"5. volume\": \""+volume+"\"\n" +
-            "        },\n" +
-            "        \""+yesterday+"\": {\n" +
-            "            \"1. open\": \""+open+"\",\n" +
-            "            \"2. high\": \""+high+"\",\n" +
-            "            \"3. low\": \""+low+"\",\n" +
-            "            \"4. close\": \"143.3101\",\n" +
-            "            \"5. volume\": \""+volume+"\"\n" +
-            "        },\n" +
-            "        \""+beforeYesterday+"\": {\n" +
-            "            \"1. open\": \""+open+"\",\n" +
-            "            \"2. high\": \""+maximumHigh+"\",\n" +
-            "            \"3. low\": \""+minimumLow+"\",\n" +
-            "            \"4. close\": \"143.3101\",\n" +
-            "            \"5. volume\": \""+volume+"\"\n" +
-            "        }\n" +
-            "    }\n" +
-            "}";
+      String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+      String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+      String beforeYesterday = LocalDate.now().minusDays(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+
+      return "{\n" +
+              "    \"Meta Data\": {\n" +
+              "        \"1. Information\": \"Daily Prices (open, high, low, close) and Volumes\",\n" +
+              "        \"2. Symbol\": \"" + symbol + "\",\n" +
+              "        \"3. Last Refreshed\": \"2021-05-26\",\n" +
+              "        \"4. Output Size\": \"Compact\",\n" +
+              "        \"5. Time Zone\": \"US/Eastern\"\n" +
+              "    },\n" +
+              "    \"Time Series (Daily)\": {\n" +
+              "        \"" + today + "\": {\n" +
+              "            \"1. open\": \"" + open + "\",\n" +
+              "            \"2. high\": \"" + high + "\",\n" +
+              "            \"3. low\": \"" + low + "\",\n" +
+              "            \"4. close\": \"143.3101\",\n" +
+              "            \"5. volume\": \"" + volume + "\"\n" +
+              "        },\n" +
+              "        \"" + yesterday + "\": {\n" +
+              "            \"1. open\": \"" + open + "\",\n" +
+              "            \"2. high\": \"" + high + "\",\n" +
+              "            \"3. low\": \"" + low + "\",\n" +
+              "            \"4. close\": \"143.3101\",\n" +
+              "            \"5. volume\": \"" + volume + "\"\n" +
+              "        },\n" +
+              "        \"" + beforeYesterday + "\": {\n" +
+              "            \"1. open\": \"" + open + "\",\n" +
+              "            \"2. high\": \"" + maximumHigh + "\",\n" +
+              "            \"3. low\": \"" + minimumLow + "\",\n" +
+              "            \"4. close\": \"143.3101\",\n" +
+              "            \"5. volume\": \"" + volume + "\"\n" +
+              "        }\n" +
+              "    }\n" +
+              "}";
+    }
+    return FakeDailyStats.getDailyStats(symbol);
   }
 
   @Override
